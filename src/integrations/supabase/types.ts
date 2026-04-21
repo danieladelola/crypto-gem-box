@@ -53,11 +53,17 @@ export type Database = {
           amount: number
           coin: string
           created_at: string
+          fee_pct: number | null
           id: string
+          pay_amount: number | null
+          pay_coin: string | null
           processed_at: string | null
           proof_url: string | null
+          rate_used: number | null
           status: Database["public"]["Enums"]["tx_status"]
           tx_hash: string | null
+          usd_amount: number | null
+          usd_credited: number | null
           user_id: string
         }
         Insert: {
@@ -65,11 +71,17 @@ export type Database = {
           amount: number
           coin: string
           created_at?: string
+          fee_pct?: number | null
           id?: string
+          pay_amount?: number | null
+          pay_coin?: string | null
           processed_at?: string | null
           proof_url?: string | null
+          rate_used?: number | null
           status?: Database["public"]["Enums"]["tx_status"]
           tx_hash?: string | null
+          usd_amount?: number | null
+          usd_credited?: number | null
           user_id: string
         }
         Update: {
@@ -77,11 +89,17 @@ export type Database = {
           amount?: number
           coin?: string
           created_at?: string
+          fee_pct?: number | null
           id?: string
+          pay_amount?: number | null
+          pay_coin?: string | null
           processed_at?: string | null
           proof_url?: string | null
+          rate_used?: number | null
           status?: Database["public"]["Enums"]["tx_status"]
           tx_hash?: string | null
+          usd_amount?: number | null
+          usd_credited?: number | null
           user_id?: string
         }
         Relationships: []
