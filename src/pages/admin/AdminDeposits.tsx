@@ -16,8 +16,12 @@ export default function AdminDeposits() {
   const { data: rows = [] } = useQuery({
     queryKey: ["admin-deposits"],
     queryFn: async () => {
-      const { data } = await supabase.from("deposits").select("*, profiles!inner(email,full_name)").order("created_at", { ascending: false });
-      return data ?? [];
+      const { data: deposits } = await supabase.from("deposits").select("*").order("created_at", { ascending: false });
+      if (!deposits?.length) return [];
+      const userIds = [...new Set(deposits.map((d) => d.user_id))];
+      const { data: profiles } = await supabase.from("profiles").select("id,email,full_name").in("id", userIds);
+      const map = new Map((profiles ?? []).map((p) => [p.id, p]));
+      return deposits.map((d) => ({ ...d, profiles: map.get(d.user_id) }));
     },
   });
 
