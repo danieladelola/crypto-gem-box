@@ -133,6 +133,37 @@ export default function AdminExchange() {
 
       <Card className="bg-gradient-card border-border/60">
         <CardHeader>
+          <CardTitle>Deposit (USD funding) settings</CardTitle>
+          <p className="text-sm text-muted-foreground">Users fund USD by paying with crypto. Control fees, limits, and availability here.</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between rounded-lg border border-border/60 p-4">
+            <div>
+              <div className="font-medium">Deposits enabled</div>
+              <div className="text-sm text-muted-foreground">Disable to stop users from creating new deposits.</div>
+            </div>
+            <Switch checked={dep.enabled} onCheckedChange={(v) => setDep({ ...dep, enabled: v })} />
+          </div>
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label>Fee percentage (%)</Label>
+              <Input type="number" step="0.01" value={dep.fee_pct} onChange={(e) => setDep({ ...dep, fee_pct: Number(e.target.value) })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Minimum deposit (USD)</Label>
+              <Input type="number" value={dep.min_usd} onChange={(e) => setDep({ ...dep, min_usd: Number(e.target.value) })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Maximum deposit (USD)</Label>
+              <Input type="number" value={dep.max_usd} onChange={(e) => setDep({ ...dep, max_usd: Number(e.target.value) })} />
+            </div>
+          </div>
+          <Button onClick={saveDep} disabled={busyDep} className="bg-gradient-primary">Save deposit settings</Button>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-card border-border/60">
+        <CardHeader>
           <CardTitle>Coin availability</CardTitle>
           <p className="text-sm text-muted-foreground">Top 50 coins shown. Disable to block users from trading them.</p>
         </CardHeader>
