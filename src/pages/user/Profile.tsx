@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,10 +21,11 @@ export default function Profile() {
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState<{ full_name: string; phone: string }>({ full_name: "", phone: "" });
 
-  // initialize form when profile loads
-  if (profile && form.full_name === "" && form.phone === "" && (profile.full_name || profile.phone)) {
-    setForm({ full_name: profile.full_name ?? "", phone: profile.phone ?? "" });
-  }
+  useEffect(() => {
+    if (profile) {
+      setForm({ full_name: profile.full_name ?? "", phone: profile.phone ?? "" });
+    }
+  }, [profile?.full_name, profile?.phone]);
 
   const initials = (profile?.full_name || user?.email || "U").split(" ").map((s: string) => s[0]).join("").slice(0, 2).toUpperCase();
 
