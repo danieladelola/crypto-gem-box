@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,11 +27,13 @@ export default function Deposit() {
   const [tx, setTx] = useState("");
   const [busy, setBusy] = useState(false);
 
-  // Fallback: pre-pick BTC once coins load
-  if (!payCoin && coins.length) {
-    const btc = coins.find((c) => c.symbol === "BTC") ?? coins[0];
-    setPayCoin({ symbol: btc.symbol, name: btc.name, image: btc.image, current_price: btc.current_price });
-  }
+  // Pre-pick BTC once coins load
+  useEffect(() => {
+    if (!payCoin && coins.length) {
+      const btc = coins.find((c) => c.symbol === "BTC") ?? coins[0];
+      setPayCoin({ symbol: btc.symbol, name: btc.name, image: btc.image, current_price: btc.current_price });
+    }
+  }, [coins, payCoin]);
 
   // Fetch the deposit address admins set for this coin (if any)
   const { data: assetRow } = useQuery({

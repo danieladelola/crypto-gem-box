@@ -16,23 +16,34 @@ interface ExchangeCfg {
   min_usd: number;
   max_usd: number;
 }
+interface DepositCfg {
+  enabled: boolean;
+  fee_pct: number;
+  min_usd: number;
+  max_usd: number;
+}
 
 const DEFAULT_CFG: ExchangeCfg = { enabled: true, fee_pct: 0.5, min_usd: 1, max_usd: 100000 };
+const DEFAULT_DEP: DepositCfg = { enabled: true, fee_pct: 0, min_usd: 10, max_usd: 100000 };
 
 export default function AdminExchange() {
   const [cfg, setCfg] = useState<ExchangeCfg>(DEFAULT_CFG);
+  const [dep, setDep] = useState<DepositCfg>(DEFAULT_DEP);
   const [busy, setBusy] = useState(false);
+  const [busyDep, setBusyDep] = useState(false);
   const [disabledSyms, setDisabledSyms] = useState<Set<string>>(new Set());
   const [txs, setTxs] = useState<any[]>([]);
   const { data: coins = [] } = useCoinList();
 
   async function load() {
-    const [cfgRes, assetsRes, txRes] = await Promise.all([
+    const [cfgRes, depRes, assetsRes, txRes] = await Promise.all([
       supabase.from("system_settings").select("value").eq("key", "exchange").maybeSingle(),
+      supabase.from("system_settings").select("value").eq("key", "deposit").maybeSingle(),
       supabase.from("market_assets").select("symbol,active"),
       supabase.from("exchange_transactions").select("*").order("created_at", { ascending: false }).limit(50),
     ]);
     if (cfgRes.data?.value) setCfg({ ...DEFAULT_CFG, ...(cfgRes.data.value as any) });
+    if (depRes.data?.value) setDep({ ...DEFAULT_DEP, ...(depRes.data.value as any) });
     setDisabledSyms(new Set((assetsRes.data ?? []).filter((a: any) => !a.active).map((a: any) => a.symbol.toUpperCase())));
     setTxs(txRes.data ?? []);
   }
@@ -49,6 +60,18 @@ export default function AdminExchange() {
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("Exchange settings saved");
+  }
+
+  async function saveDep() {
+    setBusyDep(true);
+    const { error } = await supabase.from("system_settings").upsert({
+      key: "deposit",
+      value: dep as any,
+      updated_at: new Date().toISOString(),
+    });
+    setBusyDep(false);
+    if (error) return toast.error(error.message);
+    toast.success("Deposit settings saved");
   }
 
   async function toggleCoin(symbol: string, currentlyDisabled: boolean) {
