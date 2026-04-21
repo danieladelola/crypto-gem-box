@@ -54,32 +54,56 @@ export default function AdminDeposits() {
           <table className="w-full text-sm min-w-[800px]">
             <thead className="text-xs uppercase text-muted-foreground border-b border-border">
               <tr>
-                <th className="text-left p-3">User</th><th className="text-left p-3">Coin</th>
-                <th className="text-right p-3">Amount</th><th className="text-left p-3">Tx Hash</th>
-                <th className="text-right p-3">Status</th><th className="text-right p-3">Date</th>
+                <th className="text-left p-3">User</th>
+                <th className="text-right p-3">USD requested</th>
+                <th className="text-left p-3">Pay with</th>
+                <th className="text-right p-3">Crypto amount</th>
+                <th className="text-right p-3">Rate</th>
+                <th className="text-right p-3">USD credited</th>
+                <th className="text-left p-3">Tx Hash</th>
+                <th className="text-right p-3">Status</th>
+                <th className="text-right p-3">Date</th>
                 <th className="text-right p-3">Action</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((d: any) => (
-                <tr key={d.id} className="border-b border-border/40 last:border-0">
-                  <td className="p-3"><div className="font-medium">{d.profiles?.full_name || "—"}</div><div className="text-xs text-muted-foreground">{d.profiles?.email}</div></td>
-                  <td className="p-3">{d.coin}</td>
-                  <td className="p-3 text-right">{Number(d.amount).toFixed(6)}</td>
-                  <td className="p-3 text-xs text-muted-foreground truncate max-w-[120px]">{d.tx_hash || "—"}</td>
-                  <td className="p-3 text-right"><StatusBadge status={d.status} /></td>
-                  <td className="p-3 text-right text-muted-foreground">{format(new Date(d.created_at), "MMM d")}</td>
-                  <td className="p-3 text-right">
-                    {d.status === "pending" && (
-                      <div className="flex gap-2 justify-end">
-                        <Button size="sm" onClick={() => update(d.id, "approved")} className="bg-success text-success-foreground hover:bg-success/90">Approve</Button>
-                        <Button size="sm" variant="destructive" onClick={() => update(d.id, "rejected")}>Reject</Button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && <tr><td colSpan={7} className="p-12 text-center text-muted-foreground">No deposits.</td></tr>}
+              {filtered.map((d: any) => {
+                const payCoin = d.pay_coin ?? d.coin;
+                const payAmount = d.pay_amount ?? d.amount;
+                const usdReq = d.usd_amount;
+                const usdCred = d.usd_credited;
+                return (
+                  <tr key={d.id} className="border-b border-border/40 last:border-0">
+                    <td className="p-3">
+                      <div className="font-medium">{d.profiles?.full_name || "—"}</div>
+                      <div className="text-xs text-muted-foreground">{d.profiles?.email}</div>
+                    </td>
+                    <td className="p-3 text-right font-medium">
+                      {usdReq != null ? `$${Number(usdReq).toFixed(2)}` : "—"}
+                    </td>
+                    <td className="p-3">{payCoin}</td>
+                    <td className="p-3 text-right">{Number(payAmount).toFixed(6)}</td>
+                    <td className="p-3 text-right text-xs text-muted-foreground">
+                      {d.rate_used ? `$${Number(d.rate_used).toLocaleString()}` : "—"}
+                    </td>
+                    <td className="p-3 text-right text-emerald-500 font-medium">
+                      {usdCred != null ? `$${Number(usdCred).toFixed(2)}` : "—"}
+                    </td>
+                    <td className="p-3 text-xs text-muted-foreground truncate max-w-[120px]">{d.tx_hash || "—"}</td>
+                    <td className="p-3 text-right"><StatusBadge status={d.status} /></td>
+                    <td className="p-3 text-right text-muted-foreground">{format(new Date(d.created_at), "MMM d")}</td>
+                    <td className="p-3 text-right">
+                      {d.status === "pending" && (
+                        <div className="flex gap-2 justify-end">
+                          <Button size="sm" onClick={() => update(d.id, "approved")} className="bg-success text-success-foreground hover:bg-success/90">Approve</Button>
+                          <Button size="sm" variant="destructive" onClick={() => update(d.id, "rejected")}>Reject</Button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              {filtered.length === 0 && <tr><td colSpan={11} className="p-12 text-center text-muted-foreground">No deposits.</td></tr>}
             </tbody>
           </table>
         </CardContent>
