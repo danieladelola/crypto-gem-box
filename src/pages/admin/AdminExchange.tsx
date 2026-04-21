@@ -16,23 +16,34 @@ interface ExchangeCfg {
   min_usd: number;
   max_usd: number;
 }
+interface DepositCfg {
+  enabled: boolean;
+  fee_pct: number;
+  min_usd: number;
+  max_usd: number;
+}
 
 const DEFAULT_CFG: ExchangeCfg = { enabled: true, fee_pct: 0.5, min_usd: 1, max_usd: 100000 };
+const DEFAULT_DEP: DepositCfg = { enabled: true, fee_pct: 0, min_usd: 10, max_usd: 100000 };
 
 export default function AdminExchange() {
   const [cfg, setCfg] = useState<ExchangeCfg>(DEFAULT_CFG);
+  const [dep, setDep] = useState<DepositCfg>(DEFAULT_DEP);
   const [busy, setBusy] = useState(false);
+  const [busyDep, setBusyDep] = useState(false);
   const [disabledSyms, setDisabledSyms] = useState<Set<string>>(new Set());
   const [txs, setTxs] = useState<any[]>([]);
   const { data: coins = [] } = useCoinList();
 
   async function load() {
-    const [cfgRes, assetsRes, txRes] = await Promise.all([
+    const [cfgRes, depRes, assetsRes, txRes] = await Promise.all([
       supabase.from("system_settings").select("value").eq("key", "exchange").maybeSingle(),
+      supabase.from("system_settings").select("value").eq("key", "deposit").maybeSingle(),
       supabase.from("market_assets").select("symbol,active"),
       supabase.from("exchange_transactions").select("*").order("created_at", { ascending: false }).limit(50),
     ]);
     if (cfgRes.data?.value) setCfg({ ...DEFAULT_CFG, ...(cfgRes.data.value as any) });
+    if (depRes.data?.value) setDep({ ...DEFAULT_DEP, ...(depRes.data.value as any) });
     setDisabledSyms(new Set((assetsRes.data ?? []).filter((a: any) => !a.active).map((a: any) => a.symbol.toUpperCase())));
     setTxs(txRes.data ?? []);
   }
@@ -49,6 +60,18 @@ export default function AdminExchange() {
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("Exchange settings saved");
+  }
+
+  async function saveDep() {
+    setBusyDep(true);
+    const { error } = await supabase.from("system_settings").upsert({
+      key: "deposit",
+      value: dep as any,
+      updated_at: new Date().toISOString(),
+    });
+    setBusyDep(false);
+    if (error) return toast.error(error.message);
+    toast.success("Deposit settings saved");
   }
 
   async function toggleCoin(symbol: string, currentlyDisabled: boolean) {
@@ -105,6 +128,37 @@ export default function AdminExchange() {
             </div>
           </div>
           <Button onClick={saveCfg} disabled={busy} className="bg-gradient-primary">Save settings</Button>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-card border-border/60">
+        <CardHeader>
+          <CardTitle>Deposit (USD funding) settings</CardTitle>
+          <p className="text-sm text-muted-foreground">Users fund USD by paying with crypto. Control fees, limits, and availability here.</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between rounded-lg border border-border/60 p-4">
+            <div>
+              <div className="font-medium">Deposits enabled</div>
+              <div className="text-sm text-muted-foreground">Disable to stop users from creating new deposits.</div>
+            </div>
+            <Switch checked={dep.enabled} onCheckedChange={(v) => setDep({ ...dep, enabled: v })} />
+          </div>
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label>Fee percentage (%)</Label>
+              <Input type="number" step="0.01" value={dep.fee_pct} onChange={(e) => setDep({ ...dep, fee_pct: Number(e.target.value) })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Minimum deposit (USD)</Label>
+              <Input type="number" value={dep.min_usd} onChange={(e) => setDep({ ...dep, min_usd: Number(e.target.value) })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Maximum deposit (USD)</Label>
+              <Input type="number" value={dep.max_usd} onChange={(e) => setDep({ ...dep, max_usd: Number(e.target.value) })} />
+            </div>
+          </div>
+          <Button onClick={saveDep} disabled={busyDep} className="bg-gradient-primary">Save deposit settings</Button>
         </CardContent>
       </Card>
 
