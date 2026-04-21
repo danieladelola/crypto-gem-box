@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   LayoutDashboard, ArrowDownToLine, ArrowUpFromLine, Radio, Coins, TrendingUp, Users,
-  Bell, UserCheck, FileText, Settings, LogOut, Sparkles, Menu, ChevronDown, ShieldCheck
+  Bell, UserCheck, FileText, Settings, LogOut, Sparkles, Menu, ChevronDown, ShieldCheck, ArrowLeftRight
 } from "lucide-react";
 
 type Item = { to?: string; label: string; icon: any; end?: boolean; children?: { to: string; label: string }[] };
@@ -20,6 +20,7 @@ const items: Item[] = [
     { to: "/admin/withdrawals/rejected", label: "Rejected" },
     { to: "/admin/withdrawals/all", label: "All" },
   ]},
+  { to: "/admin/exchange", label: "Exchange", icon: ArrowLeftRight },
   { label: "Manage Signals", icon: Radio, children: [
     { to: "/admin/signals/add", label: "Add" },
     { to: "/admin/signals/user", label: "User Signals" },

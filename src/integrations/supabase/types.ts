@@ -86,6 +86,78 @@ export type Database = {
         }
         Relationships: []
       }
+      exchange_transactions: {
+        Row: {
+          created_at: string
+          fee_amount: number
+          fee_pct: number
+          from_amount: number
+          from_asset: string
+          id: string
+          kind: string
+          note: string | null
+          rate: number
+          status: string
+          to_amount: number
+          to_asset: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          fee_amount?: number
+          fee_pct?: number
+          from_amount: number
+          from_asset: string
+          id?: string
+          kind: string
+          note?: string | null
+          rate: number
+          status?: string
+          to_amount: number
+          to_asset: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          fee_amount?: number
+          fee_pct?: number
+          from_amount?: number
+          from_asset?: string
+          id?: string
+          kind?: string
+          note?: string | null
+          rate?: number
+          status?: string
+          to_amount?: number
+          to_asset?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fiat_balances: {
+        Row: {
+          available: number
+          currency: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          available?: number
+          currency?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          available?: number
+          currency?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       kyc_records: {
         Row: {
           admin_note: string | null
@@ -599,6 +671,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      execute_exchange: {
+        Args: {
+          _fee_pct: number
+          _from_amount: number
+          _from_asset: string
+          _rate: number
+          _to_asset: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

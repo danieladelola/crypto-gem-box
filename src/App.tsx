@@ -21,6 +21,8 @@ import WalletPage from "./pages/user/WalletPage";
 import Markets from "./pages/user/Markets";
 import Stake from "./pages/user/Stake";
 import Settings from "./pages/user/Settings";
+import Profile from "./pages/user/Profile";
+import Exchange from "./pages/user/Exchange";
 
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -29,6 +31,7 @@ import AdminWithdrawals from "./pages/admin/AdminWithdrawals";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminExchange from "./pages/admin/AdminExchange";
 import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } });
@@ -55,6 +58,8 @@ const App = () => (
               <Route path="wallet" element={<WalletPage />} />
               <Route path="markets" element={<Markets />} />
               <Route path="stake" element={<Stake />} />
+              <Route path="exchange" element={<Exchange />} />
+              <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />
             </Route>
 
@@ -67,6 +72,7 @@ const App = () => (
               <Route path="users/:filter" element={<AdminUsers />} />
               <Route path="notifications" element={<AdminNotifications />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="exchange" element={<AdminExchange />} />
               <Route path="signals/add" element={<AdminPlaceholder title="Add Signal" description="Create and broadcast trade signals." />} />
               <Route path="signals/user" element={<AdminPlaceholder title="User Signals" description="Track signals delivered to users." />} />
               <Route path="staking/plans" element={<AdminPlaceholder title="Staking Plans" description="Create and manage staking plans." />} />

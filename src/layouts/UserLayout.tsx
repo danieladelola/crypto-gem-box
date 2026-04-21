@@ -1,15 +1,17 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard, ArrowDownToLine, ArrowUpFromLine, Wallet, LineChart,
-  Coins, Settings, LogOut, Sparkles, Menu, X, ShieldCheck
+  Coins, Settings, LogOut, Sparkles, ShieldCheck, ArrowLeftRight
 } from "lucide-react";
+import { UserHeader } from "@/components/UserHeader";
 
 const items = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/app/exchange", label: "Exchange", icon: ArrowLeftRight },
   { to: "/app/deposit", label: "Deposit", icon: ArrowDownToLine },
   { to: "/app/withdraw", label: "Withdraw", icon: ArrowUpFromLine },
   { to: "/app/wallet", label: "Wallet", icon: Wallet },
@@ -78,7 +80,7 @@ export default function UserLayout() {
   );
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 bg-sidebar border-r border-sidebar-border flex-col fixed inset-y-0 z-30">
         <SidebarContent />
@@ -94,19 +96,9 @@ export default function UserLayout() {
         </div>
       )}
 
-      <div className="flex-1 lg:ml-64">
-        {/* Mobile top bar */}
-        <header className="lg:hidden flex items-center justify-between px-4 h-14 border-b border-border bg-background sticky top-0 z-20">
-          <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
-            <Menu className="h-5 w-5" />
-          </Button>
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-md bg-gradient-primary" />
-            <span className="font-bold">Vura</span>
-          </div>
-          <div className="w-9" />
-        </header>
-        <main className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto animate-fade-in">
+      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
+        <UserHeader onOpenSidebar={() => setOpen(true)} />
+        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-[1400px] w-full mx-auto animate-fade-in">
           <Outlet />
         </main>
       </div>
