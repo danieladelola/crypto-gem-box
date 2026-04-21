@@ -15,7 +15,7 @@ export default function AdminWithdrawals() {
     queryKey: ["admin-wd", status],
     queryFn: async () => {
       let q = supabase.from("withdrawals").select("*, profiles!inner(email,full_name)").order("created_at", { ascending: false });
-      if (status && status !== "all") q = q.eq("status", status);
+      if (status && status !== "all") q = q.eq("status", status as "pending" | "approved" | "rejected");
       const { data } = await q;
       return data ?? [];
     },
