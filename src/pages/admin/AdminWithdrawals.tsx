@@ -14,10 +14,14 @@ export default function AdminWithdrawals() {
   const { data: rows = [] } = useQuery({
     queryKey: ["admin-wd", status],
     queryFn: async () => {
-      let q = supabase.from("withdrawals").select("*, profiles!inner(email,full_name)").order("created_at", { ascending: false });
+      let q = supabase.from("withdrawals").select("*").order("created_at", { ascending: false });
       if (status && status !== "all") q = q.eq("status", status as "pending" | "approved" | "rejected");
-      const { data } = await q;
-      return data ?? [];
+      const { data: withdrawals } = await q;
+      if (!withdrawals?.length) return [];
+      const userIds = [...new Set(withdrawals.map((w) => w.user_id))];
+      const { data: profiles } = await supabase.from("profiles").select("id,email,full_name").in("id", userIds);
+      const map = new Map((profiles ?? []).map((p) => [p.id, p]));
+      return withdrawals.map((w) => ({ ...w, profiles: map.get(w.user_id) }));
     },
   });
 
