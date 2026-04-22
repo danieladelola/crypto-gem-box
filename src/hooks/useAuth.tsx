@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Set listener FIRST
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, sess) => {
       setSession(sess);
       setUser(sess?.user ?? null);
       if (sess?.user) {
@@ -34,6 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             .select("role")
             .eq("user_id", sess.user.id)
             .then(({ data }) => setRoles((data ?? []).map((r: any) => r.role)));
+          // Record login event (best-effort; silent on failure)
+          if (event === "SIGNED_IN") {
+            supabase.rpc("record_login", { _ip: null, _ua: navigator.userAgent }).then(() => {});
+          }
         }, 0);
       } else {
         setRoles([]);

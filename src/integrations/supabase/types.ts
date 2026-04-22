@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      balance_adjustments: {
+        Row: {
+          admin_id: string
+          asset: string
+          created_at: string
+          delta: number
+          id: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_id: string
+          asset: string
+          created_at?: string
+          delta: number
+          id?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_id?: string
+          asset?: string
+          created_at?: string
+          delta?: number
+          id?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       copy_experts: {
         Row: {
           active: boolean
@@ -182,7 +212,13 @@ export type Database = {
           created_at: string
           doc_type: string
           doc_url: string | null
+          full_address: string | null
           id: string
+          id_back_url: string | null
+          id_front_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selfie_url: string | null
           status: Database["public"]["Enums"]["kyc_status"]
           user_id: string
         }
@@ -191,7 +227,13 @@ export type Database = {
           created_at?: string
           doc_type: string
           doc_url?: string | null
+          full_address?: string | null
           id?: string
+          id_back_url?: string | null
+          id_front_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
           status?: Database["public"]["Enums"]["kyc_status"]
           user_id: string
         }
@@ -200,7 +242,13 @@ export type Database = {
           created_at?: string
           doc_type?: string
           doc_url?: string | null
+          full_address?: string | null
           id?: string
+          id_back_url?: string | null
+          id_front_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
           status?: Database["public"]["Enums"]["kyc_status"]
           user_id?: string
         }
@@ -298,45 +346,69 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address_line1: string | null
+          address_line2: string | null
           avatar_url: string | null
           banned: boolean
+          city: string | null
+          country: string | null
           created_at: string
+          dob: string | null
           email: string | null
           email_verified: boolean
           full_name: string | null
           id: string
+          id_number: string | null
           kyc_status: Database["public"]["Enums"]["kyc_status"]
           mobile_verified: boolean
           notes: string | null
           phone: string | null
+          postal_code: string | null
+          state: string | null
           updated_at: string
         }
         Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
           avatar_url?: string | null
           banned?: boolean
+          city?: string | null
+          country?: string | null
           created_at?: string
+          dob?: string | null
           email?: string | null
           email_verified?: boolean
           full_name?: string | null
           id: string
+          id_number?: string | null
           kyc_status?: Database["public"]["Enums"]["kyc_status"]
           mobile_verified?: boolean
           notes?: string | null
           phone?: string | null
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string
         }
         Update: {
+          address_line1?: string | null
+          address_line2?: string | null
           avatar_url?: string | null
           banned?: boolean
+          city?: string | null
+          country?: string | null
           created_at?: string
+          dob?: string | null
           email?: string | null
           email_verified?: boolean
           full_name?: string | null
           id?: string
+          id_number?: string | null
           kyc_status?: Database["public"]["Enums"]["kyc_status"]
           mobile_verified?: boolean
           notes?: string | null
           phone?: string | null
+          postal_code?: string | null
+          state?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -387,6 +459,7 @@ export type Database = {
           coin: string
           created_at: string
           id: string
+          is_usd: boolean
           lock_days: number
           max_amount: number | null
           min_amount: number
@@ -398,6 +471,7 @@ export type Database = {
           coin: string
           created_at?: string
           id?: string
+          is_usd?: boolean
           lock_days: number
           max_amount?: number | null
           min_amount?: number
@@ -409,6 +483,7 @@ export type Database = {
           coin?: string
           created_at?: string
           id?: string
+          is_usd?: boolean
           lock_days?: number
           max_amount?: number | null
           min_amount?: number
@@ -576,6 +651,7 @@ export type Database = {
           created_at: string
           ends_at: string
           id: string
+          is_usd: boolean
           plan_id: string
           reward_earned: number
           started_at: string
@@ -589,6 +665,7 @@ export type Database = {
           created_at?: string
           ends_at: string
           id?: string
+          is_usd?: boolean
           plan_id: string
           reward_earned?: number
           started_at?: string
@@ -602,6 +679,7 @@ export type Database = {
           created_at?: string
           ends_at?: string
           id?: string
+          is_usd?: boolean
           plan_id?: string
           reward_earned?: number
           started_at?: string
@@ -653,9 +731,14 @@ export type Database = {
           coin: string
           created_at: string
           fee: number
+          fee_pct: number | null
           id: string
+          payout_amount: number | null
+          payout_coin: string | null
           processed_at: string | null
+          rate_used: number | null
           status: Database["public"]["Enums"]["tx_status"]
+          usd_amount: number | null
           user_id: string
         }
         Insert: {
@@ -665,9 +748,14 @@ export type Database = {
           coin: string
           created_at?: string
           fee?: number
+          fee_pct?: number | null
           id?: string
+          payout_amount?: number | null
+          payout_coin?: string | null
           processed_at?: string | null
+          rate_used?: number | null
           status?: Database["public"]["Enums"]["tx_status"]
+          usd_amount?: number | null
           user_id: string
         }
         Update: {
@@ -677,9 +765,14 @@ export type Database = {
           coin?: string
           created_at?: string
           fee?: number
+          fee_pct?: number | null
           id?: string
+          payout_amount?: number | null
+          payout_coin?: string | null
           processed_at?: string | null
+          rate_used?: number | null
           status?: Database["public"]["Enums"]["tx_status"]
+          usd_amount?: number | null
           user_id?: string
         }
         Relationships: []
@@ -689,6 +782,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_adjust_balance: {
+        Args: {
+          _asset: string
+          _delta: number
+          _reason?: string
+          _target: string
+        }
+        Returns: string
+      }
       execute_exchange: {
         Args: {
           _fee_pct: number
@@ -706,6 +808,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      record_login: { Args: { _ip?: string; _ua?: string }; Returns: undefined }
+      update_price_cache: { Args: { _prices: Json }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"

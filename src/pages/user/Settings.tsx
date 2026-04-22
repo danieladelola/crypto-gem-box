@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { UserCircle } from "lucide-react";
+import { KycForm } from "@/components/KycForm";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -96,6 +97,8 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
+
+          <KycForm />
         </div>
 
         <div className="space-y-6">

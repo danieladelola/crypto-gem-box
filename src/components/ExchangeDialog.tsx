@@ -32,6 +32,14 @@ export function ExchangeDialog({ open, onOpenChange, defaultMode = "buy", defaul
   const [amount, setAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // Push current price snapshot to server cache so the RPC can sanity-check rates.
+  useEffect(() => {
+    if (!coins.length) return;
+    const snapshot: Record<string, number> = {};
+    coins.forEach((c) => { if (c.current_price > 0) snapshot[c.symbol] = c.current_price; });
+    supabase.rpc("update_price_cache", { _prices: snapshot as any }).then(() => {});
+  }, [coins]);
+
   // Initialize on open
   useEffect(() => {
     if (!open) return;
