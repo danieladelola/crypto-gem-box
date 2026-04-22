@@ -1,16 +1,19 @@
 import { useBalances } from "@/hooks/useBalances";
-import { useMarkets, COIN_TO_GECKO, SUPPORTED_GECKO_IDS } from "@/hooks/useMarkets";
+import { useFiatBalance } from "@/hooks/useFiatBalance";
+import { useCoinList } from "@/hooks/useCoinList";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { StatusBadge } from "@/components/StatusBadge";
 import { format } from "date-fns";
+import { DollarSign } from "lucide-react";
 
 export default function WalletPage() {
   const { user } = useAuth();
   const { data: balances = [] } = useBalances();
-  const { data: markets = [] } = useMarkets(SUPPORTED_GECKO_IDS);
+  const { data: usdBalance = 0 } = useFiatBalance();
+  const { data: coins = [] } = useCoinList();
 
   const { data: activity = [] } = useQuery({
     queryKey: ["wallet-activity", user?.id],
@@ -26,7 +29,7 @@ export default function WalletPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold">Wallet</h1>
-        <p className="text-muted-foreground">All your balances in one place.</p>
+        <p className="text-muted-foreground">Your USD balance and crypto holdings.</p>
       </div>
 
       <Card className="bg-gradient-card border-border/60">
@@ -43,9 +46,25 @@ export default function WalletPage() {
               </tr>
             </thead>
             <tbody>
+              <tr className="border-b border-border/40">
+                <td className="py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
+                      <DollarSign className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <div className="font-medium">US Dollar</div>
+                      <div className="text-xs text-muted-foreground">USD (main balance)</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="py-3 text-right">{usdBalance.toFixed(2)}</td>
+                <td className="py-3 text-right">—</td>
+                <td className="py-3 text-right font-medium">{usdBalance.toFixed(2)}</td>
+                <td className="py-3 text-right">${usdBalance.toFixed(2)}</td>
+              </tr>
               {balances.map((b) => {
-                const gid = COIN_TO_GECKO[b.coin];
-                const c = markets.find((m) => m.id === gid);
+                const c = coins.find((m) => m.symbol === b.coin);
                 const total = b.available + b.staked;
                 const usd = (c?.current_price ?? 0) * total;
                 return (
@@ -66,6 +85,9 @@ export default function WalletPage() {
                   </tr>
                 );
               })}
+              {balances.length === 0 && (
+                <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">No crypto holdings yet — buy some on the Exchange page.</td></tr>
+              )}
             </tbody>
           </table>
         </CardContent>
@@ -85,7 +107,7 @@ export default function WalletPage() {
                     <div className="text-xs text-muted-foreground">{format(new Date(t.created_at), "MMM d, yyyy p")}</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-medium">{Number(t.amount).toFixed(6)}</div>
+                    <div className="font-medium">{Number(t.amount).toFixed(t.coin === "USD" ? 2 : 6)}</div>
                     <StatusBadge status={t.status ?? "completed"} />
                   </div>
                 </div>
