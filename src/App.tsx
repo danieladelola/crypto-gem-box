@@ -32,6 +32,8 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminExchange from "./pages/admin/AdminExchange";
+import AdminKyc from "./pages/admin/AdminKyc";
+import AdminBalances from "./pages/admin/AdminBalances";
 import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } });
@@ -73,6 +75,8 @@ const App = () => (
               <Route path="notifications" element={<AdminNotifications />} />
               <Route path="settings" element={<AdminSettings />} />
               <Route path="exchange" element={<AdminExchange />} />
+              <Route path="kyc" element={<AdminKyc />} />
+              <Route path="balances" element={<AdminBalances />} />
               <Route path="signals/add" element={<AdminPlaceholder title="Add Signal" description="Create and broadcast trade signals." />} />
               <Route path="signals/user" element={<AdminPlaceholder title="User Signals" description="Track signals delivered to users." />} />
               <Route path="staking/plans" element={<AdminPlaceholder title="Staking Plans" description="Create and manage staking plans." />} />
