@@ -65,9 +65,6 @@ export function PaymentCoinSelector({ value, onChange, respectDisabled = false }
                   {c.image && <img src={c.image} alt={c.symbol} className="h-6 w-6 rounded-full mr-2" />}
                   <span className="font-medium mr-2">{c.symbol}</span>
                   <span className="text-xs text-muted-foreground truncate flex-1">{c.name}</span>
-                  {c.current_price > 0 && (
-                    <span className="text-xs text-muted-foreground ml-2">${c.current_price.toLocaleString()}</span>
-                  )}
                   <Check className={cn("ml-2 h-4 w-4", value === c.symbol ? "opacity-100" : "opacity-0")} />
                 </CommandItem>
               ))}
