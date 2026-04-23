@@ -66,7 +66,7 @@ export function AssetSelector({ value, onChange, includeFiat = true, excludeSymb
           <ChevronsUpDown className="h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-popover" align="start">
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-popover z-[60] max-h-[60vh] overflow-hidden" align="start" sideOffset={4}>
         <Command>
           <CommandInput placeholder="Search by name or symbol..." />
           <CommandList>
