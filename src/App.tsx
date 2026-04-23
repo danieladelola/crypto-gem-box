@@ -35,6 +35,10 @@ import AdminExchange from "./pages/admin/AdminExchange";
 import AdminKyc from "./pages/admin/AdminKyc";
 import AdminBalances from "./pages/admin/AdminBalances";
 import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
+import AdminStakingPlans from "./pages/admin/AdminStakingPlans";
+import AdminReportsTransactions from "./pages/admin/AdminReportsTransactions";
+import AdminReportsLogins from "./pages/admin/AdminReportsLogins";
+import AdminReportsNotifications from "./pages/admin/AdminReportsNotifications";
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } });
 
@@ -79,14 +83,14 @@ const App = () => (
               <Route path="balances" element={<AdminBalances />} />
               <Route path="signals/add" element={<AdminPlaceholder title="Add Signal" description="Create and broadcast trade signals." />} />
               <Route path="signals/user" element={<AdminPlaceholder title="User Signals" description="Track signals delivered to users." />} />
-              <Route path="staking/plans" element={<AdminPlaceholder title="Staking Plans" description="Create and manage staking plans." />} />
+              <Route path="staking/plans" element={<AdminStakingPlans />} />
               <Route path="staking/users" element={<AdminPlaceholder title="User Staking" description="View all user stakes." />} />
               <Route path="trades/open" element={<AdminPlaceholder title="Open Trades" description="Active trade records." />} />
               <Route path="trades/complete" element={<AdminPlaceholder title="Complete Trades" description="Closed trade records." />} />
               <Route path="copy-experts" element={<AdminPlaceholder title="Copy Experts" description="Manage expert traders." />} />
-              <Route path="reports/transactions" element={<AdminPlaceholder title="Transaction History" description="All platform transactions." />} />
-              <Route path="reports/logins" element={<AdminPlaceholder title="Login History" description="User login activity." />} />
-              <Route path="reports/notifications" element={<AdminPlaceholder title="Notification History" description="All sent notifications." />} />
+              <Route path="reports/transactions" element={<AdminReportsTransactions />} />
+              <Route path="reports/logins" element={<AdminReportsLogins />} />
+              <Route path="reports/notifications" element={<AdminReportsNotifications />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

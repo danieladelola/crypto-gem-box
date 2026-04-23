@@ -458,36 +458,45 @@ export type Database = {
           apy: number
           coin: string
           created_at: string
+          description: string | null
+          fixed_amount: number | null
           id: string
           is_usd: boolean
           lock_days: number
           max_amount: number | null
           min_amount: number
           name: string
+          updated_at: string
         }
         Insert: {
           active?: boolean
           apy: number
           coin: string
           created_at?: string
+          description?: string | null
+          fixed_amount?: number | null
           id?: string
           is_usd?: boolean
           lock_days: number
           max_amount?: number | null
           min_amount?: number
           name: string
+          updated_at?: string
         }
         Update: {
           active?: boolean
           apy?: number
           coin?: string
           created_at?: string
+          description?: string | null
+          fixed_amount?: number | null
           id?: string
           is_usd?: boolean
           lock_days?: number
           max_amount?: number | null
           min_amount?: number
           name?: string
+          updated_at?: string
         }
         Relationships: []
       }

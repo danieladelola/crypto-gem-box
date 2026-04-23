@@ -112,7 +112,7 @@ export function ExchangeDialog({ open, onOpenChange, defaultMode = "buy", defaul
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
@@ -139,16 +139,16 @@ export function ExchangeDialog({ open, onOpenChange, defaultMode = "buy", defaul
                 Balance: {fromBalance.toFixed(6)} {from?.symbol}
               </button>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="number"
                 inputMode="decimal"
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="text-lg h-12 flex-1"
+                className="text-lg h-12 flex-1 min-w-0"
               />
-              <div className="w-44">
+              <div className="w-full sm:w-44 flex-shrink-0">
                 {from && (
                   <AssetSelector
                     value={from.symbol}
@@ -173,14 +173,14 @@ export function ExchangeDialog({ open, onOpenChange, defaultMode = "buy", defaul
               <span>You receive</span>
               <span>1 {from?.symbol} ≈ {rate > 0 ? rate.toLocaleString(undefined, { maximumFractionDigits: 8 }) : "–"} {to?.symbol}</span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 value={netTo > 0 ? netTo.toFixed(8) : ""}
                 readOnly
                 placeholder="0.00"
-                className="text-lg h-12 flex-1 bg-background/60"
+                className="text-lg h-12 flex-1 min-w-0 bg-background/60"
               />
-              <div className="w-44">
+              <div className="w-full sm:w-44 flex-shrink-0">
                 {to && (
                   <AssetSelector
                     value={to.symbol}
